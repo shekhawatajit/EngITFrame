@@ -1,23 +1,5 @@
-# Azure file shares in a multi region environment Security Concepts
-
-## FileShare Access using Private EndPoint and DNS Records
-
-The secure connection between File share goes through private endpoint and Private EndPoint resolved through DNS records for US region internal file access.
-
-![Private EndPoint](./docs/images/privateendpoint.png)
-
-DNS Record Entry
-
-![DNS Records](./docs/images/dnsrecords.png)
-
-Storage Account access is disabled by default, so it should not be accessible even within network; if this request is not coming from source and also from allowed source.
-
-![Storage Account not Acessible](./docs/images/storageaccountnetworkaccessdisabled.png)
-
----
-
 ## ** Security Considerations**
-
+---
 ### **1. Private Network Communication using Private Endpoint only:**
 - VNet Peering ensures that all communication between the two offices remains within Azure’s private network, reducing exposure to the public internet. Also we are using Private EndPoint Services which ensures Storage Accounts should be accessed only internally using through endpoint DNS.
 
@@ -36,3 +18,18 @@ For eaxmple File Share perfomance from US region user is monitored and shown on 
 ![Solution Design](./docs/images/WP01SolutionDesign.jpeg)
 
 ---
+
+## FileShare Access using Private EndPoint and DNS Records
+
+The secure connection between File share goes through private endpoint and Private EndPoint resolved through DNS records for US region internal file access.
+
+![Private EndPoint](./docs/images/privateendpoint.png)
+
+DNS Record Entry
+
+![DNS Records](./docs/images/dnsrecords.png)
+
+Storage Account access is disabled by default, so it should not be accessible even within network; if this request is not coming from source and also from allowed source.
+
+![Storage Account not Acessible](./docs/images/storageaccountnetworkaccessdisabled.png)
+
