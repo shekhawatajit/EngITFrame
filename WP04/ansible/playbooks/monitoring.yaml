@@ -1,0 +1,17 @@
+- name: Install Linux OS monitoring
+  hosts: linux
+  tasks:
+    - name: Install node_exporter
+      ansible.builtin.import_role:
+        name: prometheus.prometheus.node_exporter
+      vars:
+        node_exporter_version: 1.8.2
+
+- name: Install Windows OS monitoring
+  hosts: windows
+  tasks:
+    - name: Install windows exporter
+      ansible.builtin.import_role:
+        name: iquzart.windows_exporter
+      vars:
+        windows_exporter_version: 0.28.1

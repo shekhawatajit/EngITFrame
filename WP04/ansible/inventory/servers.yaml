@@ -1,0 +1,17 @@
+linux_observability_server:
+  hosts:
+    10.0.0.5:
+linux:
+  hosts:
+    10.0.0.4:
+    10.0.0.8:
+    10.0.0.10:
+windows:
+  hosts:
+    10.0.0.6:
+    10.0.0.9:
+    10.0.0.7:
+  vars:
+    ansible_connection: winrm
+    ansible_winrm_transport: ntlm
+    ansible_port: 5985

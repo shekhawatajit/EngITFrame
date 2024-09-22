@@ -1,0 +1,158 @@
+- name: Install Blackbox Exporter
+  hosts: linux_observability_server
+  tasks:
+    - name: Install blackbox_exporter
+      ansible.builtin.import_role:
+        name: prometheus.prometheus.blackbox_exporter
+      vars:
+        node_exporter_version: 0.25.0
+
+- name: Setup observability stack
+  hosts: linux_observability_server
+  tasks:
+    - name: Copy promethues config
+      ansible.builtin.copy:
+        src: remote_files/prometheus.yml
+        dest: /opt/prometheus.yml
+        owner: root
+        group: root
+        mode: "0644"
+        backup: true
+      become: true
+
+    - name: Setup victoriametrics
+      ansible.builtin.import_role:
+        name: victoriametrics.cluster.single
+      become: true
+      vars: # noqa var-naming[no-role-prefix]
+        # victoriametrics_version: v1.96.0
+        victoriametrics_service_args:
+          storageDataPath: "{{ victoriametrics_data_dir }}"
+          selfScrapeInterval: "{{ victoriametrics_self_scrape_interval }}"
+          retentionPeriod: "{{ victoriametrics_retention_period_months }}"
+          maxConcurrentInserts: 32
+          search.maxUniqueTimeseries: "{{ victoriametrics_search_max_unique_timeseries }}"
+          promscrape.config: /opt/prometheus.yml
+          vmalert.proxyURL: http://localhost:9431
+
+    - name: Setup vmalert
+      ansible.builtin.import_role:
+        name: victoriametrics.cluster.vmalert
+      become: true
+      vars: # noqa var-naming[no-role-prefix]
+        vic_vm_alert_rules:
+          - name: wp04 alert rules CPU Linux
+            rules:
+              - alert: HostHighCpuLoad
+                expr: (sum by (instance) (avg by (mode, instance) (rate(node_cpu_seconds_total{mode!="idle"}[2m]))) > 0.8) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+                for: 10m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: '{% raw %}Host high CPU load (instance {{ $labels.instance }}){% endraw %}'
+                  description: '{% raw %}"CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"{% endraw %}'
+
+          - name: wp04 alert rules CPU Windows
+            rules:
+                - alert: WindowsServerCpuUsage
+                  expr: 100 - (avg by (instance) (rate(windows_cpu_time_total{mode="idle"}[2m])) * 100) > 80
+                  for: 0m
+                  labels:
+                    severity: warning
+                  annotations:
+                    summary: '{% raw %}Windows Server CPU Usage (instance {{ $labels.instance }}){% endraw %}'
+                    description: "{% raw %}CPU Usage is more than 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+          - name: wp04 alert rules memory Linux
+            rules:
+              - alert: HostOutOfMemory
+                expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+                for: 2m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: '{% raw %}Host out of memory (instance {{ $labels.instance }}){% endraw %}'
+                  description: '{% raw %}"Node memory is filling up (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"{% endraw %}'
+
+          - name: wp04 alert rules memory Windows
+            rules:
+              - alert: WindowsServerMemoryUsage
+                expr: 100 - ((windows_os_physical_memory_free_bytes / windows_cs_physical_memory_bytes) * 100) > 90
+                for: 2m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: '{% raw %}Windows Server memory Usage (instance {{ $labels.instance }}){% endraw %}'
+                  description: "{% raw %}Memory usage is more than 90%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+          - name: wp04 alert rules disk Linux
+            rules:
+              - alert: HostOutOfDiskSpace
+                expr: ((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (instance, device, mountpoint) node_filesystem_readonly == 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+                for: 2m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: '{% raw %}Host out of disk space (instance {{ $labels.instance }}){% endraw %}'
+                  description: '{% raw %}"Disk is almost full (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"{% endraw %}'
+              - alert: HostDiskWillFillIn24Hours
+                expr: ((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (instance, device, mountpoint) predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs"}[1h], 24 * 3600) < 0 and ON (instance, device, mountpoint) node_filesystem_readonly == 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+                for: 2m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: '{% raw %}Host disk will fill in 24 hours (instance {{ $labels.instance }}){% endraw %}'
+                  description: '{% raw %}"Filesystem is predicted to run out of space within the next 24 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"{% endraw %}'
+
+          - name: wp04 alert rules disk Windows
+            rules:
+              - alert: WindowsServerDiskSpaceUsage
+                expr: 100.0 - 100 * ((windows_logical_disk_free_bytes / 1024 / 1024 ) / (windows_logical_disk_size_bytes / 1024 / 1024)) > 80
+                for: 2m
+                labels:
+                  severity: critical
+                annotations:
+                  summary: '{% raw %}Windows Server disk Space Usage (instance {{ $labels.instance }}){% endraw %}'
+                  description: "{% raw %}Disk usage is more than 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+    - name: Reload victoriametrics configuration
+      ansible.builtin.systemd_service:
+        state: restarted
+        name: victoriametrics
+      become: true
+
+    - name: Setup grafana
+      ansible.builtin.import_role:
+        name: grafana.grafana.grafana
+      become: true
+      vars:
+        # grafana_version: 10.3.1
+        grafana_port: 8080
+        grafana_cap_net_bind_service: false
+        grafana_security:
+          admin_user: admin
+          admin_password: observability
+        grafana_analytics:
+          enabled: false
+          reporting_enabled: false
+        grafana_dashboards:
+          - dashboard_id: 1860 # Node exporter
+            revision_id: 37
+            datasource: prometheus
+          - dashboard_id: 13659 # Blackbox exporter 1
+            revision_id: 1
+            datasource: prometheus
+          - dashboard_id: 14928 # Blackbox exporter 2
+            revision_id: 6
+            datasource: prometheus
+          - dashboard_id: 20763 # Windows exporter 1
+            revision_id: 2
+            datasource: prometheus
+          - dashboard_id: 14694 # Windows exporter 2
+            revision_id: 2
+            datasource: prometheus
+        grafana_datasources:
+          - name: prometheus
+            type: prometheus
+            url: http://localhost:8428
+            basicAuth: false
