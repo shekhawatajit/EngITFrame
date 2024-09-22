@@ -36,7 +36,7 @@ variable "us_vnet_address_space" {
 }
 
 variable "us_subnet_name" {
-  description = "Name of the EU subnet" 
+  description = "Name of the EU subnet"
 }
 
 variable "us_subnet_address_prefix" {
@@ -56,7 +56,7 @@ variable "eu_storage_account_name" {
 }
 
 variable "eu_subnet_name" {
-  description = "Name of the EU subnet" 
+  description = "Name of the EU subnet"
 }
 
 variable "eu_subnet_address_prefix" {
@@ -72,17 +72,17 @@ variable "log_analytics_workspace_name" {
 }
 
 variable "azurerm_monitor_diagnostic_setting_name" {
-  description = "Name of the diagnostic setting" 
+  description = "Name of the diagnostic setting"
 }
 
-variable fileshare_principal_id {
+variable "fileshare_principal_id" {
   description = "The principal ID of the storage account"
 }
 
 variable "vm_username" {
-  description = "Username for the VM" 
+  description = "Username for the VM"
 }
 
 variable "vm_password" {
-  description = "Password for the VM" 
+  description = "Password for the VM"
 }
