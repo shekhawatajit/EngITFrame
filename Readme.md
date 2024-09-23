@@ -1,4 +1,4 @@
-# Sample Azure Solutions designs
+# Hardened Boundary VM
 
 ## Work Package 01
 
@@ -11,4 +11,4 @@
 
 ## Work Package 09
 
-[IT Security Engineering]()
+[IT Security Engineering](./Boundary/Readme.md)
