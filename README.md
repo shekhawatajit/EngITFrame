@@ -9,6 +9,6 @@
 
 [Visit Mon / Log / Alert](./VMMonitoring/Readme.MD)
 
-## Work Package 09: 
+## Work Package 09
 
 [IT Security Engineering]()
