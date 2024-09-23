@@ -8,7 +8,7 @@ Additionally, the provisioning agent was to be removed from the VM after the fir
 - [Packer config](./docs/packerconfig.pkr.hcl)
 - [OSCAP report before hardening](./reports/reportbefore.html)
 - [OSCAP report after hardening](./reports/reportafter.html)
-- [Deployment screenshots] (./docs/Image Deployment.pdf)
+- [Deployment screenshots] (./docs/Image\ Deployment.pdf)
 
 ## Task 2: Boundary Installation
 
