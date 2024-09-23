@@ -25,11 +25,16 @@ For example File Share performance from US region user is monitored and shown on
 
 The secure connection between File share goes through private endpoint and Private EndPoint resolved through DNS records for US region internal file access.
 
+### **Private Endpoint**
+
 ![Private EndPoint](./docs/images/Private_Endpoint.png)
 
-DNS Record Entry
+### **DNS Record Entry**
 
 ![DNS Records](./docs/images/DNS_Records.png)
+
+
+### **Network Access disabled**
 
 Storage Account access is disabled by default, so it should not be accessible even within network; if this request is not coming from source and also from allowed source.
 
