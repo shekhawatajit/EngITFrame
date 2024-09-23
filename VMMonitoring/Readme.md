@@ -1,14 +1,14 @@
 # EngIT Frame - tech task - mon / log / alert
 
 ## Architecture:
-The monitoring setup is based on VictoriaMetrics and Grafana. VictoriaMetrics is used to monitor 3 Linux and 3 Windows VMs via node_exporter and windows_exporter respectively. In addition, a blackbox_exporter is used to monitor the availabilty and the TLS certificate status of three web pages.
+The monitoring setup is based on VictoriaMetrics and Grafana. VictoriaMetrics is used to monitor 3 Linux and 3 Windows VMs via node_exporter and windows_exporter respectively. In addition, a blackbox_exporter is used to monitor the availability and the TLS certificate status of three web pages.
 
-![WP04 architecture diagram of a monitoring setup using VictoriaMetrics and Grafana to monitor 3 Linux and 3 Windows VMs via node_exporter and windows_exporter respectively. In addition, a blackbox_exporter is used to monitor the availabilty and TLS certificate status of three web pages.](docs/architecture.drawio.png)
+![WP04 architecture diagram of a monitoring setup using VictoriaMetrics and Grafana to monitor 3 Linux and 3 Windows VMs via node_exporter and windows_exporter respectively. In addition, a blackbox_exporter is used to monitor the availability and TLS certificate status of three web pages.](docs/architecture.drawio.png)
 
-The dashed lines for Azure Monitore and Azure Blob Storage are not part of the terraform configuration in this repository and are illustrative for the file share monitoring concept described further below.
+The dashed lines for Azure Monitor and Azure Blob Storage are not part of the terraform configuration in this repository and are illustrative for the file share monitoring concept described further below.
 
 ### **VictoriaMetrics**
-VictoriaMetrics is an open-source time series database compatible with Prometheus and serves as the central data store for metrics and is also reponsible to scrape the target exporters and ingest the metric data. On each Linux VM, a node_exporter is installed to expose CPU, memory and disk related metrics. The Windows VMs have windows_exporter installed to expose the same metrics.
+VictoriaMetrics is an open-source time series database compatible with Prometheus and serves as the central data store for metrics and is also responsible to scrape the target exporters and ingest the metric data. On each Linux VM, a node_exporter is installed to expose CPU, memory and disk related metrics. The Windows VMs have windows_exporter installed to expose the same metrics.
 
 VictoriaMetrics scrapes the exporters of all VMs via HTTP GET requests to port 9100 (node_exporter) and 9182 (windows_exporter) respectively. The ports are configurable and the same port can be used for both exporters.
 
@@ -24,8 +24,8 @@ Grafana queries the Prometheus endpoint of VictoriaMetrics, visualizes the data 
 - Node Exporter to display Linux OS metrics including CPU utilization, memory usage, disk space usage
 ![Screenshot of Grafana dashboard "Node Exporter Full" showing Linux OS metrics](./docs/vm_monitoring_linux.png)
 - Windows Exporter to display Windows OS metrics including CPU utilization, memory usage, disk space usage
-![Screenshot of Grafana dashboard "Wdindows Exporter 2024" showing Windows OS metrics](./docs/vm_monitoring_windows.png)
-- Blackbox Exporter to display web endpoint availabilty and TLS certificate metrics including certification expiration in days
+![Screenshot of Grafana dashboard "Windows Exporter 2024" showing Windows OS metrics](./docs/vm_monitoring_windows.png)
+- Blackbox Exporter to display web endpoint availability and TLS certificate metrics including certification expiration in days
 ![Screenshot of Grafana dashboard "Blackbox Exporter (HTTP Prober)" showing web endpoint metrics](./docs/web_endpoint_monitoring.png)
 
 Multiple alerts are configured for Linux and Windows based on the specified requirements:
@@ -36,7 +36,7 @@ Multiple alerts are configured for Linux and Windows based on the specified requ
 ![Screenshot of Grafana alert list showing alerts configured in VictoriaMetrics](./docs/grafana_alert_rules.png)
 
 ### **Important Information**
-This setup is designed to be cost-effective and easy to deploy using only Terraform and Ansible. For a production deployment, we strongly suggest deploying the monitoring stack (VictoriaMetrics, Grafana, blackbox_exporter) into a Kubernetes cluster via [Flux](https://fluxcd.io/). This way, the critical components like VictoriaMetrics storage can be deployed in high-availabilty mode and all configuration changes are performed only through git commits which makes it very easy to audit or roll back changes.
+This setup is designed to be cost-effective and easy to deploy using only Terraform and Ansible. For a production deployment, we strongly suggest deploying the monitoring stack (VictoriaMetrics, Grafana, blackbox_exporter) into a Kubernetes cluster via [Flux](https://fluxcd.io/). This way, the critical components like VictoriaMetrics storage can be deployed in high-availability mode and all configuration changes are performed only through git commits which makes it very easy to audit or roll back changes.
 
 ### **Scalability and Extensibility**
 This setup is highly scalable and extensible:
@@ -59,18 +59,18 @@ Depending on the file service, the service might expose upload and download spee
 
 
 ## Reporting:
-Based on the dashboards configured in Grafana, scheduled reports can be generated via the reporting feature in Grafana Enterprise (see this [link](https://grafana.com/docs/grafana/latest/dashboards/create-reports/#scheduling) for more details). The reports can be scheduled on e.g., daily basis or triggered via API. No enterprise license for Grafana is included in this repository, therefore the reporting feature is not available. Instead of a scheduled report, the dashboard for the blackbox exporter shows the current status of the web endpoints, their TLS certificate status and endpoint response times. This dashboards servers as a continuous report and historic data can be viewed by adjusting the "to" timestamp in the Grafana time range selection.
+Based on the dashboards configured in Grafana, scheduled reports can be generated via the reporting feature in Grafana Enterprise (see this [link](https://grafana.com/docs/grafana/latest/dashboards/create-reports/#scheduling) for more details). The reports can be scheduled on e.g., daily basis or triggered via API. No enterprise license for Grafana is included in this repository, therefore the reporting feature is not available. Instead of a scheduled report, the dashboard for the black-box exporter shows the current status of the web endpoints, their TLS certificate status and endpoint response times. This dashboards servers as a continuous report and historic data can be viewed by adjusting the "to" timestamp in the Grafana time range selection.
 
 ## Deployment Automation:
 This repository contains automation code (Terraform and Ansible) to deploy the relevant resources and configure the monitoring stack. The Terraform configuration is located in directory `terraform`.
 
 ### **Terraform**
-Terraform is used to deploy the observability server and the demo workload VMs as well as supporting infrastructure like a virtual network in Azure. The follwing prerequisites are required to deploy the infrastructure:
+Terraform is used to deploy the observability server and the demo workload VMs as well as supporting infrastructure like a virtual network in Azure. The following prerequisites are required to deploy the infrastructure:
 - Azure Subscription
 - Contributor permission on the Subscription
 - Network access to the virtual network in the Subscription (e.g., through Peering, Azure Bastion or a public IP address)
 
-The code in this respository uses the observability server also as a jump host / Ansible host. In a production environment, these would be separate instances.
+The code in this repository uses the observability server also as a jump host / Ansible host. In a production environment, these would be separate instances.
 
 Deployment steps:
 ```

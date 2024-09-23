@@ -2,7 +2,7 @@
 
 ## Multi-region File Share Infrastructure
 
-[Visit Fileshare Design](./FileShare/Readme.MD)
+[Visit File Share Design](./FileShare/Readme.MD)
 
 
 ## EngIT Frame - Tech Task

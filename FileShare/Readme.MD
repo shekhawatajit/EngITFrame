@@ -15,8 +15,8 @@ Also it is optimize for best performance and provide proof with measurements. Ad
 
 ## Architecture:
 
-This arachitecture is utilising Azure File Share.
-We decided to go for an Azure File Share over becuase file server. Ref [Here](https://learn.microsoft.com/en-us/azure/storage/files/windows-server-to-azure-files)
+This architecture is utilizing Azure File Share.
+We decided to go for an Azure File Share over because file server. Ref [Here](https://learn.microsoft.com/en-us/azure/storage/files/windows-server-to-azure-files)
 
  - Reduce TCO with fully managed file shares
  - Broad compatibility with Windows file servers
