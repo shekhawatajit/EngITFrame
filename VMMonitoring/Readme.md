@@ -3,7 +3,7 @@
 ## Architecture
 The monitoring setup is based on VictoriaMetrics and Grafana. VictoriaMetrics is used to monitor 3 Linux and 3 Windows VMs via node_exporter and windows_exporter respectively. In addition, a blackbox_exporter is used to monitor the availability and the TLS certificate status of three web pages.
 
-![WP04 architecture diagram of a monitoring setup using VictoriaMetrics and Grafana to monitor 3 Linux and 3 Windows VMs via node_exporter and windows_exporter respectively. In addition, a blackbox_exporter is used to monitor the availability and TLS certificate status of three web pages.](./docs/Architecture.png)
+![WP04 architecture diagram of a monitoring setup using VictoriaMetrics and Grafana to monitor 3 Linux and 3 Windows VMs via node_exporter and windows_exporter respectively. In addition, a blackbox_exporter is used to monitor the availability and TLS certificate status of three web pages.](./docs/architecture.png)
 
 The dashed lines for Azure Monitor and Azure Blob Storage are not part of the terraform configuration in this repository and are illustrative for the file share monitoring concept described further below.
 
