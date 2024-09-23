@@ -1,9 +1,9 @@
 # EngIT Frame - tech task - mon / log / alert
 
-## Architecture:
+## Architecture
 The monitoring setup is based on VictoriaMetrics and Grafana. VictoriaMetrics is used to monitor 3 Linux and 3 Windows VMs via node_exporter and windows_exporter respectively. In addition, a blackbox_exporter is used to monitor the availability and the TLS certificate status of three web pages.
 
-![WP04 architecture diagram of a monitoring setup using VictoriaMetrics and Grafana to monitor 3 Linux and 3 Windows VMs via node_exporter and windows_exporter respectively. In addition, a blackbox_exporter is used to monitor the availability and TLS certificate status of three web pages.](docs/architecture.drawio.png)
+![WP04 architecture diagram of a monitoring setup using VictoriaMetrics and Grafana to monitor 3 Linux and 3 Windows VMs via node_exporter and windows_exporter respectively. In addition, a blackbox_exporter is used to monitor the availability and TLS certificate status of three web pages.](./docs/Architecture.png)
 
 The dashed lines for Azure Monitor and Azure Blob Storage are not part of the terraform configuration in this repository and are illustrative for the file share monitoring concept described further below.
 
@@ -22,18 +22,18 @@ Based on the metrics scraped from the exporters, the alerting component of Victo
 ### **Grafana**
 Grafana queries the Prometheus endpoint of VictoriaMetrics, visualizes the data in dashboards and also shows the list of alerts configured in VictoriaMetrics together with their current status. The following dashboards are configured:
 - Node Exporter to display Linux OS metrics including CPU utilization, memory usage, disk space usage
-![Screenshot of Grafana dashboard "Node Exporter Full" showing Linux OS metrics](./docs/vm_monitoring_linux.png)
+![Screenshot of Grafana dashboard "Node Exporter Full" showing Linux OS metrics](./docs/VM_Monitoring_Linux.png)
 - Windows Exporter to display Windows OS metrics including CPU utilization, memory usage, disk space usage
-![Screenshot of Grafana dashboard "Windows Exporter 2024" showing Windows OS metrics](./docs/vm_monitoring_windows.png)
+![Screenshot of Grafana dashboard "Windows Exporter 2024" showing Windows OS metrics](./docs/VM_Monitoring_Windows.png)
 - Blackbox Exporter to display web endpoint availability and TLS certificate metrics including certification expiration in days
-![Screenshot of Grafana dashboard "Blackbox Exporter (HTTP Prober)" showing web endpoint metrics](./docs/web_endpoint_monitoring.png)
+![Screenshot of Grafana dashboard "Blackbox Exporter (HTTP Prober)" showing web endpoint metrics](./docs/Web_Endpoint_Monitoring.png)
 
 Multiple alerts are configured for Linux and Windows based on the specified requirements:
 - High CPU utilization for both Linux and Windows targets (> 80% for two minutes)
 - High memory usage for both Linux and Windows targets (> 90%)
 - High disk space usage for both Linux and Windows targets (> 80% for Windows, > 90% for Linux)
 - Example of a predictive alert using `predict_linear` feature in VictoriaMetrics/Prometheus query language to alert when a disk will fill up within the next 24h (Linux only, but can be configured for Windows as well)
-![Screenshot of Grafana alert list showing alerts configured in VictoriaMetrics](./docs/grafana_alert_rules.png)
+![Screenshot of Grafana alert list showing alerts configured in VictoriaMetrics](./docs/Grafana_Alert_Rules.png)
 
 ### **Important Information**
 This setup is designed to be cost-effective and easy to deploy using only Terraform and Ansible. For a production deployment, we strongly suggest deploying the monitoring stack (VictoriaMetrics, Grafana, blackbox_exporter) into a Kubernetes cluster via [Flux](https://fluxcd.io/). This way, the critical components like VictoriaMetrics storage can be deployed in high-availability mode and all configuration changes are performed only through git commits which makes it very easy to audit or roll back changes.
@@ -46,7 +46,7 @@ This setup is highly scalable and extensible:
 - Additional metrics (also custom metrics) can be added via the extensions points in node_exporters/windows_exporter or via additional exporters
 
 
-## File Service Monitoring:
+## File Service Monitoring
 Depending on the type or implementation of the file service, different monitoring options are applicable. In general, the monitoring data should be ingested into VictoriaMetrics to enable alerting on the data and visualization in Grafana.
 
 ### **Client-side Monitoring**
@@ -58,10 +58,10 @@ The measurement client then regularly (e.g., scheduled via Linux cron) runs a sc
 Depending on the file service, the service might expose upload and download speed measurements directly. One example would be Azure Blob Storage where Azure Monitor provides monitoring data for ingress and egress which corresponds to upload and download. This does not include individual clients, but is nevertheless very useful to monitor overall usage of the file service and any potential capacity limitations (max ingress/egress/transactions).
 
 
-## Reporting:
+## Reporting
 Based on the dashboards configured in Grafana, scheduled reports can be generated via the reporting feature in Grafana Enterprise (see this [link](https://grafana.com/docs/grafana/latest/dashboards/create-reports/#scheduling) for more details). The reports can be scheduled on e.g., daily basis or triggered via API. No enterprise license for Grafana is included in this repository, therefore the reporting feature is not available. Instead of a scheduled report, the dashboard for the black-box exporter shows the current status of the web endpoints, their TLS certificate status and endpoint response times. This dashboards servers as a continuous report and historic data can be viewed by adjusting the "to" timestamp in the Grafana time range selection.
 
-## Deployment Automation:
+## Deployment Automation
 This repository contains automation code (Terraform and Ansible) to deploy the relevant resources and configure the monitoring stack. The Terraform configuration is located in directory `terraform`.
 
 ### **Terraform**

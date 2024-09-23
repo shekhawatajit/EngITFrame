@@ -7,4 +7,4 @@
 
 ## EngIT Frame - Tech Task
 
-[Visit VM Monitoring Design](./VMMonitoring/Readme.md)
+[Visit VM Monitoring Design](./VMMonitoring/Readme.MD)

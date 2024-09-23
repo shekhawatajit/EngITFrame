@@ -1,19 +1,19 @@
 # Use Azure file shares in a multi region environment
 
-## Objective:
+## Objective
 
 Setup two Azure region (for example EU, US) connected to each other using VNET peering. The EU configuration will host a file share providing upload and download capabilities, serving single and parallel downloads from multiple clients. 
 
 Also it is optimize for best performance and provide proof with measurements. Additionally, create a secure and authenticated/authorized connection concept from a US office to the web service hosted in the EU. IaC is managed by Terraform.
 
-### Key Components:
+### Key Components
 - US-West Office Resource Group: `uswest1`
 - EU Central Office Resource Group: `eucentral`
 - Virtual Network Peering: Secures private network connectivity between two regions
 - Authentication & Authorization: Ensures only authorized users and systems access the resources
 - Encryption: Data is encrypted both in transit and at rest
 
-## Architecture:
+## Architecture
 
 This architecture is utilizing Azure File Share.
 We decided to go for an Azure File Share over because file server. Ref [Here](https://learn.microsoft.com/en-us/azure/storage/files/windows-server-to-azure-files)
@@ -29,15 +29,15 @@ This design offers a secure and authenticated solution to connect resources betw
 
 We have used authentication over SMB for accessing Azure file shares. This setup provides the same seamless single sign-on (SSO) experience when accessing Azure file shares as accessing on-premises file shares. Your client needs to be domain joined to AD DS, because the authentication is still done by the AD DS domain controller. Also, you need to assign both share level and file/directory level permissions to get access to the data. Share level permission assignment goes through Azure RBAC model. File/directory level permission is managed as Windows ACLs. 
 
-Data file transfer coomunication would go through vnet -> vnet using via Storage Account Private EndPoint through DNS.
+Data file transfer communication would go through vnet -> vnet using via Storage Account Private EndPoint through DNS.
 
-![Solution Design](./docs/images/SolutionDesign.jpeg)
+![Solution Design](./docs/images/Solution_Design.jpeg)
 
 ---
 
 ## 1. Network Design Overview
 
-### Network Architecture:
+### Network Architecture
 
 The following components will be deployed in two regions:
 1. **US-West Office** (Resource Group: `uswest1`)
@@ -53,7 +53,7 @@ The following components will be deployed in two regions:
    - Subnets: Defined for web services and secure communication
    - Network Security Groups (NSGs): Control access to the web services
 
-### VNet Peering Design:
+### VNet Peering Design
 
 - **Objective**: Securely connect the `vnet-uswest` and `vnet-eucentral` networks using **VNet Peering** to create a private, secure communication path between both offices without exposing resources to the public internet.
 - **Solution**: Traffic between these VNets will stay within the Azure backbone, reducing latency and enhancing security.
@@ -86,14 +86,14 @@ Apply appropriate NSG rules to allow traffic between the two VNets for specific 
 ---
 
 ## 3. Authentication and Authorization Mechanisms
-### Authentication Mechanisms:
+### Authentication Mechanisms
 
 1. **Azure Active Directory (AAD)**: Use AAD for managing identities and implementing access control for users and applications.
    - **Service Authentication**
    - **User Authentication**
 
 
-### Authorization Mechanisms:
+### Authorization Mechanisms
 
 1. **Role-Based Access Control (RBAC)**: Control which users or applications can access resources by assigning Azure roles (e.g., Reader, Contributor) in both resource groups (`uswest1` and `eucentral`).
 2. **NSG Rules**: NSGs ensure that only traffic from trusted subnets or users is allowed to pass through the network.
@@ -102,11 +102,11 @@ Apply appropriate NSG rules to allow traffic between the two VNets for specific 
 
 ## 4. Data Encryption
 
-### Encryption in Transit:
+### Encryption in Transit
 
 All data flowing between the US and EU VNets will be encrypted using **TLS/SSL** protocols. The connection through VNet Peering remains private over the Azure backbone and does not traverse through the public internet.
 
-### Encryption at Rest:
+### Encryption at Rest
 All data stored in Azure will use Azure-managed encryption at rest, leveraging **Azure Storage Service Encryption (SSE)** and **Azure Disk Encryption** for VMs. By default, data stored in Azure Files is encrypted with Microsoft-managed keys. With Microsoft-managed keys, Microsoft maintains the keys to encrypt/decrypt the data and manages rotating them regularly. You can also choose to manage your own keys, which gives you control over the rotation process.
 
 ---
