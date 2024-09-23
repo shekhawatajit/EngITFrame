@@ -117,7 +117,14 @@ All data stored in Azure will use Azure-managed encryption at rest, leveraging *
 
 ---
 
-## 6. Scalability
+## 6. Performance Dashboard
+
+File upload and download speed can be measured recorded in Azure Log Analytics and can be monitored using custom reports.
+
+![Performance Dashboard](./docs/images/Performance_Dashboard.jpeg)
+
+
+## 7. Scalability
 
 Azure file share size is limited to 100 tebibytes (TiB). There's no minimum file share size and no limit on the number of Azure file shares.
 Maximum size of a file in a file share is 1 TiB, and there's no limit on the number of files in a file share.
