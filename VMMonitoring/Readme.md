@@ -37,6 +37,8 @@ Multiple alerts are configured for Linux and Windows based on the specified requ
 - Example of a predictive alert using `predict_linear` feature in VictoriaMetrics/Prometheus query language to alert when a disk will fill up within the next 24h (Linux only, but can be configured for Windows as well)
 ![Screenshot of Grafana alert list showing alerts configured in VictoriaMetrics](./docs/grafana_alert_rules.png)
 
+Notice: In real life, we would also set up active alerting for end users.
+
 ### Important Information
 This setup is designed to be cost-effective and easy to deploy using only Terraform and Ansible. For a production deployment, we strongly suggest deploying the monitoring stack (VictoriaMetrics, Grafana, blackbox_exporter) into a Kubernetes cluster via [Flux](https://fluxcd.io/). This way, the critical components like VictoriaMetrics storage can be deployed in high-availability mode and all configuration changes are performed only through git commits which makes it very easy to audit or roll back changes.
 
@@ -61,7 +63,7 @@ Depending on the file service, the service might expose upload and download spee
 
 
 ## Reporting
-Based on the dashboards configured in Grafana, scheduled reports can be generated via the reporting feature in Grafana Enterprise (see this [link](https://grafana.com/docs/grafana/latest/dashboards/create-reports/#scheduling) for more details). The reports can be scheduled on e.g., daily basis or triggered via API. No enterprise license for Grafana is included in this repository, therefore the reporting feature is not available. Instead of a scheduled report, the dashboard for the black-box exporter shows the current status of the web endpoints, their TLS certificate status and endpoint response times. This dashboards servers as a continuous report and historic data can be viewed by adjusting the "to" timestamp in the Grafana time range selection.
+Based on the dashboards configured in Grafana, scheduled reports can be generated via the reporting feature in Grafana Enterprise (see this [link](https://grafana.com/docs/grafana/latest/dashboards/create-reports/#scheduling) for more details). The reports can be scheduled on e.g., daily basis or triggered via API. No enterprise license for Grafana is included in this repository, therefore the reporting feature is not available. Instead of a scheduled report, the dashboard for the black-box exporter shows the current status of the web endpoints, their TLS certificate status and endpoint response times. This dashboards servers as a continuous report and historic data can be viewed by adjusting the "to" timestamp in the Grafana time range selection.[For more details check Alerts section](#alerts).
 
 ## Deployment Automation
 This repository contains automation code (Terraform and Ansible) to deploy the relevant resources and configure the monitoring stack. The Terraform configuration is located in directory `terraform`.
