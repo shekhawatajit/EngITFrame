@@ -1,10 +1,12 @@
 # Sample Azure Solutions designs
 
-## Multi-region File Share Infrastructure
+## Work Package 01: Deployment Infrastructure
 
-[Visit File Share Design](./FileShare/Readme.MD)
+[Visit Work Package 01: Deployment Infrastructure](./FileShare/Readme.MD)
 
 
-## EngIT Frame - Tech Task
+## Work Package 04: Mon / Log / Alert
 
-[Visit VM Monitoring Design](./VMMonitoring/Readme.MD)
+[Visit Work Package 04: Mon / Log / Alert](./VMMonitoring/Readme.MD)
+
+## Work Package 09: IT Security Engineering
