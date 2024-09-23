@@ -15,7 +15,7 @@
 
 For eaxmple File Share perfomance from US region user is monitored and shown on performance dashboard.
 
-![Solution Design](./docs/images/WP01SolutionDesign.jpeg)
+![Solution Design](./docs/images/SolutionDesign.jpeg)
 
 ---
 
