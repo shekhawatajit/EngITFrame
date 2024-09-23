@@ -1,10 +1,10 @@
 # Use Azure file shares in a multi region environment
 
-## Objective
+## 1. Objective
 
 Setup two Azure region (for example EU, US) connected to each other using VNET peering. The EU configuration will host a file share providing upload and download capabilities, serving single and parallel downloads from multiple clients. 
 
-Also it is optimize for best performance and provide proof with measurements. Additionally, create a secure and authenticated/authorized connection concept from a US office to the web service hosted in the EU. IaC is managed by Terraform.
+Optimize for best performance and provide proof with measurements. Additionally, create a secure and authenticated/authorized connection concept from a US office to the web service hosted in the EU. IaC is managed by Terraform.
 
 ### Key Components
 - US-West Office Resource Group: `uswest1`
@@ -13,17 +13,15 @@ Also it is optimize for best performance and provide proof with measurements. Ad
 - Authentication & Authorization: Ensures only authorized users and systems access the resources
 - Encryption: Data is encrypted both in transit and at rest
 
-## Architecture
+## 2. Architecture
 
 This architecture is utilizing Azure File Share.
-We decided to go for an Azure File Share over because file server. Ref [Here](https://learn.microsoft.com/en-us/azure/storage/files/windows-server-to-azure-files)
+We decided to go for an Azure File Share (Ref [Here](https://learn.microsoft.com/en-us/azure/storage/files/windows-server-to-azure-files))
 
  - Reduce TCO with fully managed file shares
  - Broad compatibility with Windows file servers
  - Flexible deployment and hybrid access
  - Simplified data protection and access control
-
-This document outlines the design of a secure, authenticated, and authorized connection between resources in the US-West office and the EU office using Azure Virtual Network (VNet) peering. This solution ensures encrypted data transmission between offices, as well as secure authorization and authentication mechanisms.
 
 This design offers a secure and authenticated solution to connect resources between the US office and the EU web service using Azure VNet peering. It incorporates robust security practices, such as identity management, encrypted communication, and comprehensive monitoring. These measures ensure that data is protected in transit and at rest, and that only authorized users can access services.
 
@@ -33,9 +31,7 @@ Data file transfer communication would go through vnet -> vnet using via Storage
 
 ![Solution Design](./docs/images/Solution_Design.jpeg)
 
----
-
-## 1. Network Design Overview
+## 3. Network Design Overview
 
 ### Network Architecture
 
@@ -67,8 +63,7 @@ As the above diagram depicts:
 - Secure communication through firewalls and Network Security Groups (NSGs).
 - File Share access only through Private Endpoint
 
----
-## 2. VNet Peering Setup
+## 4. VNet Peering Setup
 ### **Step 1: Create Virtual Networks in US and EU Regions**
 
 - US-West VNet
@@ -83,9 +78,7 @@ As the above diagram depicts:
 
 Apply appropriate NSG rules to allow traffic between the two VNets for specific ports/services (e.g., HTTPS).
 
----
-
-## 3. Authentication and Authorization Mechanisms
+## 5. Authentication and Authorization Mechanisms
 ### Authentication Mechanisms
 
 1. **Azure Active Directory (AAD)**: Use AAD for managing identities and implementing access control for users and applications.
@@ -98,9 +91,7 @@ Apply appropriate NSG rules to allow traffic between the two VNets for specific 
 1. **Role-Based Access Control (RBAC)**: Control which users or applications can access resources by assigning Azure roles (e.g., Reader, Contributor) in both resource groups (`uswest1` and `eucentral`).
 2. **NSG Rules**: NSGs ensure that only traffic from trusted subnets or users is allowed to pass through the network.
 
----
-
-## 4. Data Encryption
+## 6. Data Encryption
 
 ### Encryption in Transit
 
@@ -109,22 +100,18 @@ All data flowing between the US and EU VNets will be encrypted using **TLS/SSL**
 ### Encryption at Rest
 All data stored in Azure will use Azure-managed encryption at rest, leveraging **Azure Storage Service Encryption (SSE)** and **Azure Disk Encryption** for VMs. By default, data stored in Azure Files is encrypted with Microsoft-managed keys. With Microsoft-managed keys, Microsoft maintains the keys to encrypt/decrypt the data and manages rotating them regularly. You can also choose to manage your own keys, which gives you control over the rotation process.
 
----
-
-## 5. Security Concepts
-
-[Please read more about Security Concepts here](./Security.MD)
-
----
-
-## 6. Performance Dashboard
+## 7. Performance Dashboard
 
 File upload and download speed can be measured recorded in Azure Log Analytics and can be monitored using custom reports.
 
 ![Performance Dashboard](./docs/images/Performance_Dashboard.jpeg)
 
+## 8. Security Concepts
 
-## 7. Scalability
+[Please read more about Security Concepts here](./Security.MD)
+
+
+## 9. Scalability
 
 Azure file share size is limited to 100 tebibytes (TiB). There's no minimum file share size and no limit on the number of Azure file shares.
 Maximum size of a file in a file share is 1 TiB, and there's no limit on the number of files in a file share.
