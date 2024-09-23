@@ -19,7 +19,7 @@
 
 As an example, File Share performance from US region user is monitored and shown on performance dashboard. Other metrics can be added as needed.
 
-![Solution Design](./docs/images/Solution_Design.jpeg)
+![Solution Design](./docs/images/solution_design.jpeg)
 
 ## 5. FileShare Access using Private EndPoint and DNS Records
 
@@ -27,16 +27,16 @@ The secure connection between File share goes through Private Endpoint which is 
 
 ### **Private Endpoint**
 
-![Private EndPoint](./docs/images/Private_Endpoint.png)
+![Private EndPoint](./docs/images/private_endpoint.png)
 
 ### **DNS Record Entry**
 
-![DNS Records](./docs/images/DNS_Records.png)
+![DNS Records](./docs/images/dns_records.png)
 
 
 ### **Network Access disabled**
 
 Storage Account access is disabled by default, so it should not be accessible even within network; if this request is not coming from source and also from allowed source.
 
-![Storage Account not Accessible](./docs/images/Storageaccount_Network_Access_Disabled.png)
+![Storage Account not Accessible](./docs/images/storageaccount_network_access_disabled.png)
 

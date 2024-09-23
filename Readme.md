@@ -2,12 +2,12 @@
 
 ## Work Package 01
 
-[Visit Deployment Infrastructure](./FileShare/Readme.MD)
+[Visit Deployment Infrastructure](./FileShare/Readme.md)
 
 
 ## Work Package 04
 
-[Visit Mon / Log / Alert](./VMMonitoring/Readme.MD)
+[Visit Mon / Log / Alert](./VMMonitoring/Readme.md)
 
 ## Work Package 09
 

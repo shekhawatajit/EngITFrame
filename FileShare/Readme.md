@@ -29,7 +29,7 @@ We have used authentication over SMB for accessing Azure file shares. This setup
 
 Data file transfer communication would go through vnet -> vnet using via Storage Account Private EndPoint through DNS.
 
-![Solution Design](./docs/images/Solution_Design.jpeg)
+![Solution Design](./docs/images/solution_design.jpeg)
 
 ## 3. Network Design Overview
 
@@ -104,11 +104,11 @@ All data stored in Azure will use Azure-managed encryption at rest, leveraging *
 
 File upload and download speed can be measured recorded in Azure Log Analytics and can be monitored using custom reports.
 
-![Performance Dashboard](./docs/images/Performance_Dashboard.jpeg)
+![Performance Dashboard](./docs/images/performance_dashboard.jpeg)
 
 ## 8. Security Concepts
 
-[Please read more about Security Concepts here](./Security.MD)
+[Please read more about Security Concepts here](./Security.md)
 
 
 ## 9. Scalability
