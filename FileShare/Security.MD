@@ -1,5 +1,5 @@
 ## Security Considerations
----
+
 ### **1. Private Network Communication using Private Endpoint only**
 - VNet Peering ensures that all communication between the two offices remains within Azure’s private network, reducing exposure to the public internet. Also we are using Private EndPoint Services which ensures Storage Accounts should be accessed only internally using through endpoint DNS.
 
