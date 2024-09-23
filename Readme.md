@@ -1,4 +1,4 @@
-# Sample Azure Solutions designs
+# Hardened Boundary VM
 
 ## Work Package 01
 
