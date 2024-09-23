@@ -1,9 +1,9 @@
-# EngIT Frame - tech task - WP04 - mon / log / alert
+# EngIT Frame - tech task - mon / log / alert
 
 ## Architecture
 The monitoring setup is based on VictoriaMetrics and Grafana. VictoriaMetrics is used to monitor 3 Linux and 3 Windows VMs via node_exporter and windows_exporter respectively. In addition, a blackbox_exporter is used to monitor the availabilty and the TLS certificate status of three web pages.
 
-![WP04 architecture diagram of a monitoring setup using VictoriaMetrics and Grafana to monitor 3 Linux and 3 Windows VMs via node_exporter and windows_exporter respectively. In addition, a blackbox_exporter is used to monitor the availabilty and TLS certificate status of three web pages.](docs/wp04_architecture.drawio.png)
+![WP04 architecture diagram of a monitoring setup using VictoriaMetrics and Grafana to monitor 3 Linux and 3 Windows VMs via node_exporter and windows_exporter respectively. In addition, a blackbox_exporter is used to monitor the availabilty and TLS certificate status of three web pages.](docs/architecture.drawio.png)
 
 The dashed lines for Azure Monitore and Azure Blob Storage are not part of the terraform configuration in this repository and are illustrative for the file share monitoring concept described further below.
 
@@ -22,18 +22,18 @@ Based on the metrics scraped from the exporters, the alerting component of Victo
 ### Grafana
 Grafana queries the Prometheus endpoint of VictoriaMetrics, visualizes the data in dashboards and also shows the list of alerts configured in VictoriaMetrics together with their current status. The following dashboards are configured:
 - Node Exporter to display Linux OS metrics including CPU utilization, memory usage, disk space usage
-![Screenshot of Grafana dashboard "Node Exporter Full" showing Linux OS metrics](docs/vm_monitoring_linux.png)
+![Screenshot of Grafana dashboard "Node Exporter Full" showing Linux OS metrics](./docs/vm_monitoring_linux.png)
 - Windows Exporter to display Windows OS metrics including CPU utilization, memory usage, disk space usage
-![Screenshot of Grafana dashboard "Wdindows Exporter 2024" showing Windows OS metrics](docs/vm_monitoring_windows.png)
+![Screenshot of Grafana dashboard "Wdindows Exporter 2024" showing Windows OS metrics](./docs/vm_monitoring_windows.png)
 - Blackbox Exporter to display web endpoint availabilty and TLS certificate metrics including certification expiration in days
-![Screenshot of Grafana dashboard "Blackbox Exporter (HTTP Prober)" showing web endpoint metrics](docs/web_endpoint_monitoring.png)
+![Screenshot of Grafana dashboard "Blackbox Exporter (HTTP Prober)" showing web endpoint metrics](./docs/web_endpoint_monitoring.png)
 
 Multiple alerts are configured for Linux and Windows based on the specified requirements:
 - High CPU utilization for both Linux and Windows targets (> 80% for two minutes)
 - High memory usage for both Linux and Windows targets (> 90%)
 - High disk space usage for both Linux and Windows targets (> 80% for Windows, > 90% for Linux)
 - Example of a predictive alert using `predict_linear` feature in VictoriaMetrics/Prometheus query language to alert when a disk will fill up within the next 24h (Linux only, but can be configured for Windows as well)
-![Screenshot of Grafana alert list showing alerts configured in VictoriaMetrics](docs/grafana_alert_rules.png)
+![Screenshot of Grafana alert list showing alerts configured in VictoriaMetrics](./docs/grafana_alert_rules.png)
 
 ### Important Information:
 This setup is designed to be cost-effective and easy to deploy using only Terraform and Ansible. For a production deployment, we strongly suggest deploying the monitoring stack (VictoriaMetrics, Grafana, blackbox_exporter) into a Kubernetes cluster via [Flux](https://fluxcd.io/). This way, the critical components like VictoriaMetrics storage can be deployed in high-availabilty mode and all configuration changes are performed only through git commits which makes it very easy to audit or roll back changes.

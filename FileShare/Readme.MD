@@ -23,7 +23,7 @@ We have used authentication over SMB for accessing Azure file shares. This setup
 
 Data file transfer coomunication would go through vnet -> vnet using via Storage Account Private EndPoint through DNS.
 
-![Solution Design](./docs/images/WP01SolutionDesign.jpeg)
+![Solution Design](./docs/images/SolutionDesign.jpeg)
 
 ---
 
@@ -46,8 +46,6 @@ The following components will be deployed in two regions:
 ### **VNet Peering Design:**
 - **Objective**: Securely connect the `vnet-uswest` and `vnet-eucentral` networks using **VNet Peering** to create a private, secure communication path between both offices without exposing resources to the public internet.
 - **Solution**: Traffic between these VNets will stay within the Azure backbone, reducing latency and enhancing security.
-
-![File Share Solution Design](./docs/images/WP01SolutionDesign.jpeg)
 
 #### **Network Peering Diagram**
 As the above diagram depicts:
@@ -97,7 +95,7 @@ All data stored in Azure (both in the US and EU) will use Azure-managed encrypti
 ---
 
 ## Security Concepts
-[Please read more about Security Concepts here](./wp01-security.MD)
+[Please read more about Security Concepts here](./Security.MD)
 
 ## Scalability
 
