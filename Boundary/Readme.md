@@ -1,11 +1,12 @@
-# Sample Azure Solutions designs
+# Hardened Boundary Server
 
-## Work Package 01
+## Task 1: Image Hardening
+
+The goal of this task was to create a hardened Ubuntu 22.04 Image using Packer.
 
 [Visit Deployment Infrastructure](./FileShare/Readme.md)
 
-
-## Work Package 04
+## Task 2: Boundary Installation
 
 [Visit Mon / Log / Alert](./VMMonitoring/Readme.md)
 
