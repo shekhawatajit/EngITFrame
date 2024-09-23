@@ -1,12 +1,14 @@
 # Sample Azure Solutions designs
 
-## Work Package 01: Deployment Infrastructure
+## Work Package 01
 
-[Visit Work Package 01: Deployment Infrastructure](./FileShare/Readme.MD)
+[Visit Deployment Infrastructure](./FileShare/Readme.MD)
 
 
-## Work Package 04: Mon / Log / Alert
+## Work Package 04
 
-[Visit Work Package 04: Mon / Log / Alert](./VMMonitoring/Readme.MD)
+[Visit Mon / Log / Alert](./VMMonitoring/Readme.MD)
 
-## Work Package 09: IT Security Engineering
+## Work Package 09: 
+
+[IT Security Engineering]()
