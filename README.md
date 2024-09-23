@@ -7,4 +7,4 @@
 
 ## EngIT Frame - Tech Task
 
-[Visit WP04 Design](./VMMonitoring/Readme.md)
+[Visit VM Monitoring Design](./VMMonitoring/Readme.md)
